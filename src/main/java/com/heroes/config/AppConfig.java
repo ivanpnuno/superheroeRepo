@@ -28,7 +28,7 @@ public class AppConfig extends ResourceConfig {
 	}
 
 	public AppConfig() {
-		packages("com.baeldung.jersey.server");
+		packages("com.heroes");
 		property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
 		this.register(ConstraintViolationExceptionHandler.class);
 		this.register(CustomExceptionHandler.class);

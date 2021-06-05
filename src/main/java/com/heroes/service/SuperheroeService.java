@@ -56,7 +56,7 @@ public class SuperheroeService {
 		try {
 			superheroeRepository.save(superheroe);
 		} catch (DataIntegrityViolationException e) {
-			throw new CustomNotFoundException(String.format("Error creating Superheroe %s", e.getMessage()));
+			throw new CustomNotFoundException(String.format("Error creating Superheroe: %s", name));
 		}
 	}
 
@@ -73,7 +73,7 @@ public class SuperheroeService {
 		try {
 			superheroeRepository.save(superheroe);
 		} catch (DataIntegrityViolationException e) {
-			throw new CustomNotFoundException(String.format("Error updating Superheroe %s", e.getMessage()));
+			throw new CustomNotFoundException(String.format("Error updating Superheroe: %s", superheroeDTO.getName()));
 		}
 		
 		return superheroeDTO;
