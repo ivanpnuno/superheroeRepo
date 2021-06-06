@@ -7,9 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.ws.rs.core.Response;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,8 +16,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import com.heroes.service.SuperheroeService;
-import com.heroes.commands.CreateCommand;
 import com.heroes.domain.SuperheroeDTO;
 import com.heroes.domain.entity.Superheroe;
 import com.heroes.exceptions.BaseException;
@@ -27,17 +23,13 @@ import com.heroes.exceptions.CustomNotFoundException;
 import com.heroes.repository.SuperheroeRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class SuperhereoServiceTest {
+public class SuperheroeServiceTest {
 
 	@Mock
     private SuperheroeRepository superheroeRepository;
 	
 	@InjectMocks
     private SuperheroeService superheroeService;
-	
-	/*@BeforeEach
-	void setMockOutput() throws CustomNotFoundException {
-	}*/
 	
 	@Test
     public void findAllShoulReturnHeroesListForMockedHeroes() {
@@ -116,7 +108,7 @@ public class SuperhereoServiceTest {
 			superheroeService.update(new SuperheroeDTO(1L, "Supertest"));
 		} catch (BaseException e) {
 			assertThat(e.getExceptionCode()).isEqualTo(404);
-			assertThat(e.getMessage()).isEqualTo("Error updating Superheroe test");
+			assertThat(e.getMessage()).isEqualTo("Error updating Superheroe");
 		}
     }
 }

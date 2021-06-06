@@ -22,7 +22,7 @@ import com.heroes.exceptions.BaseException;
 import com.heroes.exceptions.CustomNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
-public class SuperhereoControllerTest {
+public class SuperheroeControllerTest {
 
 	@Mock
     private SuperheroeService superheroeService;

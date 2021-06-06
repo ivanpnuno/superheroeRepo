@@ -28,7 +28,7 @@ import com.heroes.repository.SuperheroeRepository;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestPropertySource(locations = "classpath:application.properties")
-public class SuperheroIntegrationTest {
+public class SuperheroeIntegrationTest {
 	
 	@Autowired
 	private SuperheroeRepository superheroeRepository;
@@ -144,7 +144,7 @@ public class SuperheroIntegrationTest {
 			restTemplate.postForEntity(baseurl + "/create", request,SuperheroeDTO.class);
 		} catch (RestClientException e) {
 			assertThat(e.getMessage()).contains("404");
-			assertThat(e.getMessage()).contains("ConstraintViolationException");
+			assertThat(e.getMessage()).contains("Error creating Superheroe");
 		}
 	}
 	
@@ -190,7 +190,7 @@ public class SuperheroIntegrationTest {
 			restTemplate.postForEntity(baseurl + "/update", request,SuperheroeDTO.class);
 		} catch (RestClientException e) {
 			assertThat(e.getMessage()).contains("404");
-			assertThat(e.getMessage()).contains("ConstraintViolationException");
+			assertThat(e.getMessage()).contains("Error updating Superheroe");
 		}
 	}
 	

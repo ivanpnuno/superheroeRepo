@@ -73,7 +73,7 @@ public class SuperheroeService {
 		try {
 			superheroeRepository.save(superheroe);
 		} catch (DataIntegrityViolationException e) {
-			throw new CustomNotFoundException(String.format("Error updating Superheroe: %s", superheroeDTO.getName()));
+			throw new CustomNotFoundException(String.format("Error updating Superheroe"));
 		}
 		
 		return superheroeDTO;
