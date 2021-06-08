@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import com.heroes.domain.SuperheroeDTO;
 import com.heroes.domain.entity.Superheroe;
+import com.heroes.exceptions.BaseException;
+import com.heroes.exceptions.CustomDataIntegrityViolationException;
 import com.heroes.exceptions.CustomNotFoundException;
 import com.heroes.meter.SuperheroeMeter;
 import com.heroes.repository.SuperheroeRepository;
@@ -62,7 +64,7 @@ public class SuperheroeService {
 
 	@SuperheroeMeter
 	@CachePut(key="#result.id")
-	public SuperheroeDTO update(SuperheroeDTO superheroeDTO) throws CustomNotFoundException {
+	public SuperheroeDTO update(SuperheroeDTO superheroeDTO) throws BaseException {
 
 		Superheroe superheroe = Superheroe.builder().id(superheroeDTO.getId()).name(superheroeDTO.getName()).build();
 
@@ -73,7 +75,7 @@ public class SuperheroeService {
 		try {
 			superheroeRepository.save(superheroe);
 		} catch (DataIntegrityViolationException e) {
-			throw new CustomNotFoundException(String.format("Error updating Superheroe"));
+			throw new CustomDataIntegrityViolationException(String.format("Error updating Superheroe"));
 		}
 		
 		return superheroeDTO;

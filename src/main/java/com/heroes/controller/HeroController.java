@@ -2,7 +2,15 @@ package com.heroes.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.annotation.ApplicationScope;
 
 import com.heroes.commands.CreateCommand;
@@ -17,80 +25,67 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
 
-@Path("/v1")
+@RestController
+@RequestMapping("/api")
 @ApplicationScope
 @Produces(MediaType.APPLICATION_JSON_VALUE)
+@Validated
 public class HeroController {
 	
 	@Autowired
 	private SuperheroeService superheroeService;
-
-	@GET
-	@Path( "/heroes")
+	
+	@GetMapping("/heroes")
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
 	@SuperheroeMeter
-	public Response heroes() {
-		List<SuperheroeDTO> heroes = superheroeService.findAll();
-		return Response.ok(heroes).build();
+	public List<SuperheroeDTO> heroes() {
+		return superheroeService.findAll();
 	}
 	
-	@GET
-	@Path( "/heroes/{id}")
+	@GetMapping("/heroes/{id}")
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
 	@SuperheroeMeter
-	public Response heroe(@PathParam("id") Long id) throws CustomNotFoundException {
-		SuperheroeDTO h = superheroeService.getById(id);
-		return Response.ok(h).build();
+	public SuperheroeDTO heroe(@PathVariable("id") Long id) throws CustomNotFoundException {
+		return superheroeService.getById(id);
 	}
 	
-	@GET
-	@Path( "/heroes/search")
+	@GetMapping("/heroes/search")
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
 	@SuperheroeMeter
-	public Response search(@QueryParam("filter") String filter) throws BaseException {
-		if(filter==null) {
+	@Validated
+	public List<SuperheroeDTO> search(@RequestParam(value = "filter") String filter) throws BaseException {
+		if(filter.isEmpty()) {
 			throw new CustomBadRequestException(String.format("Filter is not valid"));
 		}
-		List<SuperheroeDTO> heroes = superheroeService.search(filter);
-		return Response.ok(heroes).build();
+		return superheroeService.search(filter);
 	}
 	
-	@POST
-	@Path( "/heroes/create")
+	@PostMapping("/heroes/create")
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
 	@SuperheroeMeter
-	public Response create(@Valid CreateCommand create) throws BaseException {
+	public String create(@Valid @RequestBody CreateCommand create, Errors errors) throws BaseException {
 		superheroeService.create(create.getName());
-		return Response.ok(String.format("A new Superhero has born, %s!", create.getName())).build();
+		return String.format("A new Superhero has born, %s!", create.getName());
 	}
 	
-	@POST
-	@Path( "/heroes/update")
+	@PostMapping("/heroes/update")
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
 	@SuperheroeMeter
-	public Response update(@Valid @RequestBody SuperheroeDTO superheroeDTO) throws BaseException {
-		superheroeService.update(superheroeDTO);
-		return Response.ok(superheroeDTO).build();
+	public SuperheroeDTO update(@Valid @RequestBody SuperheroeDTO superheroeDTO, Errors errors) throws BaseException {
+		return superheroeService.update(superheroeDTO);
 	}
 	
-	@POST
-	@Path( "/heroes/delete/{id}")
+	@PostMapping("/heroes/delete/{id}")
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
 	@SuperheroeMeter
-	public Response delete(@PathParam("id") Long id) throws BaseException {
+	public String delete(@PathVariable("id") Long id) throws BaseException {
 		superheroeService.delete(id);
-		return Response.ok("Superheroe removed").build();
+		return "Superheroe removed";
 	}
 
 }

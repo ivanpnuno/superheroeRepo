@@ -44,7 +44,7 @@ public class SuperheroeIntegrationTest {
 	public void init() {
 		restTemplate = new RestTemplate();
 		
-		baseurl = String.format("http://localhost:%d/api/v1/heroes", port);
+		baseurl = String.format("http://localhost:%d/api/heroes", port);
 		
 		// Add some mocked heroes
 		superheroeRepository.save(Superheroe.builder().name("Supertest").build());
@@ -89,9 +89,10 @@ public class SuperheroeIntegrationTest {
 	}
 
 	@Test
-	public void searchWithoutFilterShouldReturnNotFoundException() {
+	public void searchWithEmptyFilterShouldReturnNotFoundException() {
 		try {
-			restTemplate.getForEntity(baseurl + "/search", SuperheroeDTO.class);
+			String filter = "";
+			restTemplate.getForEntity(baseurl + "/search?filter={1}", SuperheroeDTO.class, filter);
 		} catch (RestClientException e) {
 			assertThat(e.getMessage()).contains("400");
 			assertThat(e.getMessage()).contains("Filter is not valid");
@@ -189,7 +190,7 @@ public class SuperheroeIntegrationTest {
 		try {
 			restTemplate.postForEntity(baseurl + "/update", request,SuperheroeDTO.class);
 		} catch (RestClientException e) {
-			assertThat(e.getMessage()).contains("404");
+			assertThat(e.getMessage()).contains("422");
 			assertThat(e.getMessage()).contains("Error updating Superheroe");
 		}
 	}

@@ -76,7 +76,7 @@ public class SuperheroeServiceTest {
     }
     
     @Test
-    public void updateShoulReturnHeroForMockedHero() throws CustomNotFoundException {
+    public void updateShoulReturnHeroForMockedHero() throws BaseException {
     	// Mock Superhero
 		when(superheroeRepository.findById(1L)).thenReturn(Optional.of(new Superheroe(1L, "Testman")));
 
@@ -107,7 +107,7 @@ public class SuperheroeServiceTest {
 		try {
 			superheroeService.update(new SuperheroeDTO(1L, "Supertest"));
 		} catch (BaseException e) {
-			assertThat(e.getExceptionCode()).isEqualTo(404);
+			assertThat(e.getExceptionCode()).isEqualTo(422);
 			assertThat(e.getMessage()).isEqualTo("Error updating Superheroe");
 		}
     }

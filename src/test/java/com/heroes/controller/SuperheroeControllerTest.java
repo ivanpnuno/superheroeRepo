@@ -6,9 +6,6 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.core.Response;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -39,12 +36,10 @@ public class SuperheroeControllerTest {
 		heroes.add(new SuperheroeDTO(2L, "Testman"));
 		when(superheroeService.findAll()).thenReturn(heroes);
 
-    	Response response = heroController.heroes();
-	    List<SuperheroeDTO> list = (List<SuperheroeDTO>)response.getEntity();
-	    assertThat(list.size()).isEqualTo(2);
-	    assertThat(list.get(0).getName()).isEqualTo("Supertest");
-	    assertThat(list.get(1).getName()).isEqualTo("Testman");
-	    assertThat(response.getStatus()).isEqualTo(200);
+		List<SuperheroeDTO> response = heroController.heroes();
+	    assertThat(response.size()).isEqualTo(2);
+	    assertThat(response.get(0).getName()).isEqualTo("Supertest");
+	    assertThat(response.get(1).getName()).isEqualTo("Testman");
     }
 	
 	@SuppressWarnings("unchecked")
@@ -53,10 +48,8 @@ public class SuperheroeControllerTest {
     	// Mock Superhero
 		when(superheroeService.findAll()).thenReturn(new ArrayList<SuperheroeDTO>());
 
-    	Response response = heroController.heroes();
-	    List<SuperheroeDTO> list = (List<SuperheroeDTO>)response.getEntity();
-	    assertThat(list.isEmpty()).isEqualTo(true);
-	    assertThat(response.getStatus()).isEqualTo(200);
+		List<SuperheroeDTO> response = heroController.heroes();
+	    assertThat(response.isEmpty()).isEqualTo(true);
     }
 	
     @Test
@@ -64,10 +57,8 @@ public class SuperheroeControllerTest {
     	// Mock Superhero
 		when(superheroeService.getById(1L)).thenReturn(new SuperheroeDTO(1L, "Supertest"));
 
-    	Response response = heroController.heroe(1L);
-	    SuperheroeDTO heroe = (SuperheroeDTO)response.getEntity();
-	    assertThat(heroe.getName()).isEqualTo("Supertest");
-	    assertThat(response.getStatus()).isEqualTo(200);
+		SuperheroeDTO response = heroController.heroe(1L);
+	    assertThat(response.getName()).isEqualTo("Supertest");
     }
     
     @Test
@@ -84,7 +75,7 @@ public class SuperheroeControllerTest {
     @Test
     public void searchShoulReturnErrorForNonValidFilter() throws CustomNotFoundException {
 		try {
-			heroController.search(null);
+			heroController.search("");
 		} catch (BaseException e) {
 			assertThat(e.getExceptionCode()).isEqualTo(400);
 			assertThat(e.getMessage()).isEqualTo("Filter is not valid");
@@ -94,10 +85,8 @@ public class SuperheroeControllerTest {
     @SuppressWarnings("unchecked")
 	@Test
     public void searchShoulReturnEmptyHeroesList() throws BaseException {
-    	Response response = heroController.search("name");
-	    List<SuperheroeDTO> list = (List<SuperheroeDTO>)response.getEntity();
-	    assertThat(list.isEmpty()).isEqualTo(true);
-	    assertThat(response.getStatus()).isEqualTo(200);
+    	List<SuperheroeDTO> response = heroController.search("name");
+	    assertThat(response.isEmpty()).isEqualTo(true);
     }
     
     @SuppressWarnings("unchecked")
@@ -108,11 +97,9 @@ public class SuperheroeControllerTest {
     	heroes.add(new SuperheroeDTO(1L, "Testman"));
     	when(superheroeService.search("man")).thenReturn(heroes);
     			
-    	Response response = heroController.search("man");
-	    List<SuperheroeDTO> list = (List<SuperheroeDTO>)response.getEntity();
-	    assertThat(list.size()).isEqualTo(1);
-	    assertThat(list.get(0).getName()).isEqualTo("Testman");
-	    assertThat(response.getStatus()).isEqualTo(200);
+    	List<SuperheroeDTO> response = heroController.search("man");
+	    assertThat(response.size()).isEqualTo(1);
+	    assertThat(response.get(0).getName()).isEqualTo("Testman");
     }
     
 	@Test
@@ -120,7 +107,7 @@ public class SuperheroeControllerTest {
     	CreateCommand createCommand = new CreateCommand();
     	createCommand.setName("Supertest");
     	    			
-    	Response response = heroController.create(createCommand);
-	    assertThat(response.getStatus()).isEqualTo(200);
+    	String response = heroController.create(createCommand, null);
+	    assertThat(response).contains("A new Superhero has born");
     }
 }
